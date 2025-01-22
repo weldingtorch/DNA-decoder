@@ -226,17 +226,16 @@ int main(void)
                 ungetc(nuk[1], inpfp);
             } 
         }
-        selector ++;
+        selector++;
     }
 
     printf("Start: %d\n", selector);
 
-    while (1)
+    while (!feof(inpfp))
     {
         // Triplet reading
         
         nuk[0] = convertToAA(nuk);
-        //printf("%c", nuk[0]);
 
         if (nuk[0] == 'M')
             writingProtein = 1;
@@ -253,21 +252,17 @@ int main(void)
         
         for (int i = 0; i < 3; i++)
         {
-            while (1)
-            {
+            do {
                 nuk[i] = fgetc(inpfp);
-                if (nuk[i] != '\n') // Reread if CR+LF
-                    break; 
-            }
+            } while (nuk[i] == '\n');  // Reread if CR+LF
         }
-        if (feof(inpfp)) // Stop readeing if EOF
-            break;
-
-        selector += 3;
         
+        selector += 3;  
     }
+    
     fclose(inpfp);
     fclose(outfp);
     printf("Done!\n");
+    
     return 0;
 }
